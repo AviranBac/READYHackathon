@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:scaleType="center"
-        android:background="#00FFFF"
+        android:background="#d2ce56"
         android:text="" />
     <TextView
         android:id="@+id/detectionId"
@@ -70,7 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:scaleType="center"
-        android:background="#00FFFF"
+        android:background="#d2ce56"
         android:text=""/>
 
 </LinearLayout>
