@@ -67,12 +67,6 @@ public class MainActivity extends AppCompatActivity {
                 height.setText("גובה: " + detectionToShow.getHeight());
                 distance.setText("מרחק: " + detectionToShow.getDistance());
 
-                if (detectionToShow.isOurs()) {
-                    isOurs.setText("מטוס ישראלי");
-                } else {
-                    isOurs.setText("מטוס אויב");
-                }
-
                 if (detectionToShow.isShotDown()) {
                     isShotDown.setText("יורט");
                 } else {
