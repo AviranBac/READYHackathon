@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         planesDetected = (ListView) findViewById(R.id.planesList);
 
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new ArrayList<String>());
+        arrayAdapter = new ArrayAdapter<String>(this, R.layout.listrow, R.id.textView2, new ArrayList<String>());
 
         planesDetected.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         private Exception exception;
 
         protected void onPreExecute() {
-            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, new ArrayList<String>());
+            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.listrow, R.id.textView2, new ArrayList<String>());
             planesDetections = new ArrayList<>();
         }
 
