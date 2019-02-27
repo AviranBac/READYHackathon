@@ -1,0 +1,27 @@
+{
+  "name": "readyhackathon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AviranBac/READYHackathon.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AviranBac/READYHackathon/issues"
+  },
+  "homepage": "https://github.com/AviranBac/READYHackathon#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "mysql": "^2.16.0",
+    "utf8": "^3.0.0",
+    "vuex": "^3.1.0"
+  }
+}
