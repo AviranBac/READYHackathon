@@ -1,13 +1,18 @@
 package com.example.student.readyapp;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -21,10 +26,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
-    List<Detection> planesDetections = new ArrayList<>();
+    List<Detection> planesDetections;
     ListView planesDetected;
     ArrayAdapter<String> arrayAdapter;
 
@@ -37,14 +44,53 @@ public class MainActivity extends AppCompatActivity {
 
         planesDetected = (ListView) findViewById(R.id.planesList);
 
-        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<String>());
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new ArrayList<String>());
 
         planesDetected.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), " " + planesDetections.get(position).getDistance(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), " " + planesDetections.get(position).getDistance(), Toast.LENGTH_LONG).show();
+                Detection detectionToShow = planesDetections.get(position);
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
+                View mView = getLayoutInflater().inflate(R.layout.dialog_layout, null);
+                LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+
+                TextView detectionID = mView.findViewById(R.id.detectionId);
+                TextView detectionTime = mView.findViewById(R.id.detectionTime);
+                TextView height = mView.findViewById(R.id.height);
+                TextView distance = mView.findViewById(R.id.distance);
+                TextView isOurs = mView.findViewById(R.id.isOurs);
+                TextView isShotDown = mView.findViewById(R.id.isShotDown);
+
+                detectionID.setText("מספר גילוי: " + detectionToShow.getId());
+                detectionTime.setText("זמן גילוי: " + detectionToShow.getDetectionTime());
+                height.setText("גובה: " + detectionToShow.getHeight());
+                distance.setText("מרחק: " + detectionToShow.getDistance());
+
+                if (detectionToShow.isOurs()) {
+                    isOurs.setText("מטוס ישראלי");
+                } else {
+                    isOurs.setText("מטוס אויב");
+                }
+
+                if (detectionToShow.isShotDown()) {
+                    isShotDown.setText("יורט");
+                } else {
+                    isShotDown.setText("לא יורט");
+                }
+
+                mBuilder.setView(mView);
+                AlertDialog dialog = mBuilder.create();
+                dialog.show();
             }
         });
+
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                new RetrieveFeedTask().execute();
+            }
+        }, 0, 1000);
     }
 
     class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
@@ -52,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
         private Exception exception;
 
         protected void onPreExecute() {
+            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, new ArrayList<String>());
+            planesDetections = new ArrayList<>();
         }
 
         protected String doInBackground(Void... urls) {
@@ -84,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 JSONArray allDetections = new JSONArray(response);
-                Toast.makeText(getApplicationContext(), allDetections.length() + "", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), allDetections.length() + "", Toast.LENGTH_LONG).show();
 
                 for (int i = 0; i < allDetections.length(); i++) {
                     JSONObject detection = allDetections.getJSONObject(i);
