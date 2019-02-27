@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="d-flex justify-between align-center mb-3">
-      <v-btn @click="all">all</v-btn>
-      <v-btn @click="none">none</v-btn>
+      <v-btn @click="all">הרחב הכל</v-btn>
+      <v-btn @click="none">צמצם הכל</v-btn>
     </div>
 
     <v-expansion-panel v-if="detections.length > 0" v-model="panel" expand>
@@ -11,7 +11,7 @@
         <v-card>
           <v-layout row wrap>
             <v-flex d-flex xs12 sm6 md8>
-              <v-card color="purple" dark>
+              <v-card color="#06425C" dark>
                 <v-card-title primary class="title"
                   >זיהוי מספר {{ detection.ID }}</v-card-title
                 >
@@ -34,25 +34,13 @@
                       <span class="infoDetail">{{ detection.DISTANCE }}</span>
                     </v-flex>
                   </v-layout>
-                  <v-layout row wrap>
-                    <v-flex d-flex xs12 sm6 md5>
-                      <span class="infoTitle">האם המטוס שלנו:</span><br />
-                      <span class="infoDetail">{{ detection.IS_OURS }}</span>
-                    </v-flex>
-                    <v-flex d-flex xs12 sm6 offset-md1 md5>
-                      <span class="infoTitle">האם המטוס ייורט:</span><br />
-                      <span class="infoDetail">{{
-                        detection.IS_SHUTDOWN
-                      }}</span>
-                    </v-flex>
-                  </v-layout>
                 </v-card-text>
               </v-card>
             </v-flex>
             <v-flex d-flex xs12 sm6 md4>
-              <v-card color="blue lighten-2" dark>
+              <v-card color="black lighten-2" dark>
                 <v-card-text>
-                  תמונה
+                  <img :src="detection['IMAGE_URL']" width="160" height="120" />
                 </v-card-text>
               </v-card>
             </v-flex>
@@ -64,12 +52,16 @@
 </template>
 
 <script>
+// import * as io from 'socket.io-client'
 export default {
   props: ['detections', 'items'],
   data() {
     return {
       panel: [],
     }
+  },
+  mounted() {
+    // const socket = io('localhost:3000')
   },
   methods: {
     // Create an array the length of our items
@@ -86,13 +78,18 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.title {
+  /* color: Black; */
+}
 .infoTitle {
   font-size: 12px;
+  /* color: Black; */
   align: right;
   font-weight: bold;
 }
 .infoDetail {
   font-size: 12px;
+  /* color: Black; */
   align: right;
 }
 .v-card__text {

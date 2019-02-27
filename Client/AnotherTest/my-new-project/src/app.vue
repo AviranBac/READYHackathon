@@ -1,5 +1,6 @@
 <script>
 import appConfig from '@src/app.config'
+import Sidebar from '@src/components/Sidebar'
 
 export default {
   page: {
@@ -9,6 +10,7 @@ export default {
       return title ? `${title} | ${appConfig.title}` : appConfig.title
     },
   },
+  components: { Sidebar },
 }
 </script>
 
@@ -18,6 +20,7 @@ export default {
     Even when routes use the same component, treat them
     as distinct and create the component again.
     -->
+    <Sidebar></Sidebar>
     <RouterView :key="$route.fullPath" />
   </div>
 </template>

@@ -38,6 +38,8 @@
     "lodash": "4.17.11",
     "normalize.css": "8.0.1",
     "nprogress": "0.2.0",
+    "socket.io": "^2.2.0",
+    "socket.io-client": "^2.2.0",
     "vue": "2.6.6",
     "vue-meta": "1.5.8",
     "vue-router": "3.0.2",
