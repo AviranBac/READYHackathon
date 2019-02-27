@@ -14,7 +14,7 @@ import Usage from '@src/components/Usage'
 
 export default {
   page: {
-    title: 'Home',
+    title: '',
     meta: [{ name: 'description', content: appConfig.description }],
   },
   components: { Layout, Usage },
@@ -29,8 +29,21 @@ export default {
   methods: {
     loadDetections() {
       axios.get('http://localhost:3000/detections').then((response) => {
-        this.detections = response.data
+        this.detections = this.detectionsAfterURLUpdate(response.data)
       })
+    },
+    detectionsAfterURLUpdate(detections) {
+      let updatedDetections = detections
+      for (
+        let currDetection = 0;
+        currDetection < detections.length;
+        currDetection++
+      ) {
+        updatedDetections[currDetection]['IMAGE_URL'] = String(
+          updatedDetections[currDetection]['IMAGE_URL']
+        ).replace('\\\\', '\\')
+      }
+      return updatedDetections
     },
   },
 }

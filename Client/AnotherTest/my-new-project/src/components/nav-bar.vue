@@ -9,7 +9,7 @@ export default {
       persistentNavRoutes: [
         {
           name: 'home',
-          title: 'Home',
+          title: '',
         },
       ],
       loggedInNavRoutes: [
