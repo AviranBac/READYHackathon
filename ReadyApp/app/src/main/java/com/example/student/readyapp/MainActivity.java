@@ -26,5 +26,6 @@ public class MainActivity extends AppCompatActivity {
                 planesDetections);
 
         planesDetected.setAdapter(arrayAdapter);
+        
     }
 }
