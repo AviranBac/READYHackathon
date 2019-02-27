@@ -25,5 +25,5 @@ INSERT INTO ready.t_detections
 INSERT INTO ready.t_detections
 	(DETECTION_TIME, HEIGHT, DISTANCE, IS_OURS, IS_SHUTDOWN, IMAGE_URL)
 	VALUES ('Wed Feb 26 2019 23:59:20 GMT+0200 (GMT+02:00)', 1200.32432432, 15.565442, 1, 1, 'airplane7.jpg');
-	
+
 commit;
