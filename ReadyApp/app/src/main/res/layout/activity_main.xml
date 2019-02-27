@@ -14,7 +14,8 @@
         android:layout_height="match_parent"
         android:text=":גילויי מטוסים"
         android:textSize="20sp"
-        android:typeface="serif" />
+        android:typeface="serif"
+        android:fontFamily="sans-serif"/>
 
     <ListView
         android:id="@+id/planesList"

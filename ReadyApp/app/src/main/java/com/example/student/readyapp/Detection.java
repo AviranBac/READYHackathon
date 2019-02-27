@@ -5,13 +5,13 @@ import java.util.Date;
 public class Detection {
 
     private int id;
-    private Date detectionTime;
+    private String detectionTime;
     private double height;
     private double distance;
     private boolean isOurs;
     private boolean isShotDown;
 
-    public Detection(int id, Date detectionTime, double height, double distance, boolean isOurs, boolean isShotDown) {
+    public Detection(int id, String detectionTime, double height, double distance, boolean isOurs, boolean isShotDown) {
         this.id = id;
         this.detectionTime = detectionTime;
         this.height = height;
@@ -28,11 +28,11 @@ public class Detection {
         this.id = id;
     }
 
-    public Date getDetectionTime() {
+    public String getDetectionTime() {
         return this.detectionTime;
     }
 
-    public void setDetectionTime(Date detectionTime) {
+    public void setDetectionTime(String detectionTime) {
         this.detectionTime = detectionTime;
     }
 

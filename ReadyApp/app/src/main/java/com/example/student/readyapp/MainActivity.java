@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,6 +24,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    List<Detection> planesDetections = new ArrayList<>();
+    ListView planesDetected;
+    ArrayAdapter<String> arrayAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,25 +35,9 @@ public class MainActivity extends AppCompatActivity {
 
         new RetrieveFeedTask().execute();
 
-        ListView planesDetected = (ListView) findViewById(R.id.planesList);
+        planesDetected = (ListView) findViewById(R.id.planesList);
 
-        Detection firstDetection = new Detection(0, new Date(), 100, 1, true, false);
-        Detection secondDetection = new Detection(1, new Date(), 100, 5, true, false);
-
-        final List<Detection> planesDetections = new ArrayList<>();
-        planesDetections.add(firstDetection);
-        planesDetections.add(secondDetection);
-
-        List<String> planesDetectionsDates = new ArrayList<>();
-        planesDetectionsDates.add(firstDetection.getDetectionTime().toString());
-        planesDetectionsDates.add(secondDetection.getDetectionTime().toString());
-
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_list_item_1,
-                planesDetectionsDates);
-
-        planesDetected.setAdapter(arrayAdapter);
+        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<String>());
 
         planesDetected.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -68,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(Void... urls) {
 
             try {
-                URL url = new URL("http://10.10.247.124:3000/url");
+                URL url = new URL("http://10.10.247.124:3000/detections");
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 try {
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -93,15 +82,27 @@ public class MainActivity extends AppCompatActivity {
                 response = "THERE WAS AN ERROR";
             }
 
-            //try {
-                //JSONObject jObj = new JSONObject();
-                //JSONObject mJsonObjectProperty = jObj.getJSONObject("main");
-                //String tempature = mJsonObjectProperty.getString("temp");
-                Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
-            //} //catch (JSONException e) {
-               // e.printStackTrace();
-            //}
+            try {
+                JSONArray allDetections = new JSONArray(response);
+                Toast.makeText(getApplicationContext(), allDetections.length() + "", Toast.LENGTH_LONG).show();
 
+                for (int i = 0; i < allDetections.length(); i++) {
+                    JSONObject detection = allDetections.getJSONObject(i);
+                    int id = detection.getInt("ID");
+                    String detectionTime = detection.getString("DETECTION_TIME");
+                    double height = detection.getDouble("HEIGHT");
+                    double distance = detection.getDouble("DISTANCE");
+                    String isOurs = detection.getString("IS_OURS");
+                    String isShutDown = detection.getString("IS_SHUTDOWN");
+                    Detection currDetection = new Detection(id, detectionTime, height, distance, isOurs.equals("כן"), isShutDown.equals("לא"));
+                    planesDetections.add(currDetection);
+                    arrayAdapter.add(currDetection.getDetectionTime().toString());
+                }
+                planesDetected.setAdapter(arrayAdapter);
+
+            } catch (JSONException e) {
+                    e.printStackTrace();
+            }
         }
     }
 }
