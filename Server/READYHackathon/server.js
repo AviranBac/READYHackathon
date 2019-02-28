@@ -3,13 +3,16 @@ var mysql = require('mysql');
 var fs = require("fs");
 var cors = require('cors');
 var bodyParser = require('body-parser');
+var multer = require('multer');
+var imageUpload = require('./handler');
+//var upload = multer({ dest: 'uploads/' })
 var app = express();
 
 const io = require('socket.io')(server);
 
 app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('static'));
 app.use(express.static(__dirname + '/public'));
 
@@ -19,6 +22,27 @@ io.on('connection', (socket) => {
         console.log('user disconnected');
     });
 });
+
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, 'images/')
+//     },
+//     filename: function (req, file, cb) {
+//         cb(null, file.originalname)
+//     }
+// });
+
+// var uploading =  multer({storage: storage}).single('file');
+// app.post(uploading, function (req, res, next) {
+//     uploading(req, res, function (err) {
+//         if (err) {
+//            console.log(err);
+//         }
+//         res.send('Successfully uploaded ' + req.files.length + ' files!');
+//     });
+// });
+
+//app.post('/uploadImage', imageUpload.uploadFile, imageUpload.afterUpload);
 
 app.get('/detections', function (req, res) {
     const con = mysql.createConnection({
@@ -48,11 +72,8 @@ app.get('/detections', function (req, res) {
 });
 
 app.post('/detections', function(req, res) {
-    console.log("Detection time: " + req.body.detectionTime);
-    console.log("Height: " + req.body.planeHeight);
-    console.log("Distance: " + req.body.planeDistance);
-    console.log("Ours: " + req.body.isOurs);
-    console.log("Shutdown: " + req.body.isShutdown);
+    console.log(req);
+    console.log(req.body);
     const con = mysql.createConnection({
         host: "localhost",
         user: "root",
@@ -64,18 +85,15 @@ app.post('/detections', function(req, res) {
             throw err;
         }
         var sql = "INSERT INTO ready.t_detections (DETECTION_TIME, HEIGHT, DISTANCE, IS_OURS, IS_SHUTDOWN, IMAGE_URL) " +
-                  "VALUES ('" + new Date() + "', " + req.body.planeHeight + ", " + req.body.planeDistance + ", " + req.body.isOurs + ", " + req.body.isShutdown + ", 'blah.png')";
-        //var sql = "INSERT INTO ready.t_detections (DETECTION_TIME, HEIGHT, DISTANCE, IS_OURS, IS_SHUTDOWN, IMAGE_URL) " +
-        //          "VALUES (" + new Date() + ", " + req.body.planeHeight + ", " + req.body.planeDistance + ", " + req.body.isOurs + ", " + req.body.isShutdown + ", 'blah.png')";
-        console.log(sql);
+                  "VALUES ('" + req.body.detectionTime + "', " + req.body.planeHeight + ", " + req.body.planeDistance + ", " + req.body.isOurs + ", " + req.body.isShutdown + ", '" + req.body.imageUrl + "')";
         con.query(sql, function (err, result) {
             if (err) {
                 throw err;
             }
             console.log("1 record inserted");
+            con.end();
         });
     });
-    con.end();
     res.send(req.body);
 });
 
@@ -96,7 +114,6 @@ const handleBoolean = (value) => {
 }
 
 const prettyDate = (date) => {
-    console.log("Entered pretty date");
     const dateObject = new Date(date);
     let hours = String(dateObject.getHours());
     let minutes = String(dateObject.getMinutes());

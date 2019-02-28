@@ -25,6 +25,7 @@ export default {
   },
   mounted() {
     this.loadDetections()
+    setInterval(this.loadDetections, 1000)
   },
   methods: {
     loadDetections() {
