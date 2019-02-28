@@ -63,7 +63,7 @@ app.get('/detections', function (req, res) {
                 result[currResult]["DETECTION_TIME"] = prettyDate(result[currResult]["DETECTION_TIME"]);
                 result[currResult]["IS_OURS"] = handleBoolean(result[currResult]["IS_OURS"]);
                 result[currResult]["IS_SHUTDOWN"] = handleBoolean(result[currResult]["IS_SHUTDOWN"]);
-                result[currResult]["IMAGE_URL"] = handleUrl(result[currResult]["IMAGE_URL"]);
+                result[currResult]["IMAGE_URL"] = handleUrl('airplane1.jpg');
             }
             res.json(result);
         });
